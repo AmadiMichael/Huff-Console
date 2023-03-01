@@ -5,7 +5,7 @@
 Huffors can
 
 - log out the stack (up to 16 items deep) as bytes32 values (similar to evm.codes)
-- log individual stack items as any type (uint256, int256, address, bool, bytes32)
+- log individual stack items as any variable type (uint256, int256, address, bool, bytes32)
 - log out an area of memory/calldata as bytes(dynamic) or as a string.
 
 - (experimental): log out an area in memory as a string and with styling (using foundry's new log styling feature)
