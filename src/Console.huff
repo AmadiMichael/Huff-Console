@@ -154,13 +154,18 @@
 
 
 
+
+
+
+
+
+
 /// @notice console log stack item `N`as uint256
 /// @dev @param dupN should be any dup opcode from dup1 to dup16
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_STACK_AS_UINT(dupN, mem_ptr) = {
     0xf5b1bba900000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    <dupN> <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(<dupN>, <mem_ptr>)
 }
 
 /// @notice console log stack item `N`as int256
@@ -168,8 +173,7 @@
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_STACK_AS_INT(dupN, mem_ptr) = {
     0x4e0c1d1d00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    <dupN> <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(<dupN>, <mem_ptr>)
 }
 
 /// @notice console log stack item `N`as an address
@@ -177,8 +181,7 @@
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_STACK_AS_ADDRESS(dupN, mem_ptr) = {
     0x2c2ecbc200000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    <dupN> <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(<dupN>, <mem_ptr>)
 }
 
 /// @notice console log stack item `N`as bytes32
@@ -186,8 +189,7 @@
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_STACK_AS_BYTES32(dupN, mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    <dupN> <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(<dupN>, <mem_ptr>)
 }
 
 /// @notice console log stack item `N`as a boolean
@@ -196,487 +198,231 @@
 /// @dev only 0x01 is seen as true in this case. meaning 0x00 and any value greater than 0x02 will log out false. Consider logging as a uint too.
 #define macro LOG_STACK_AS_BOOL(dupN, mem_ptr) = {
     0x32458eed00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    <dupN> <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(<dupN>, <mem_ptr>)
 }
-
-
-
-
-
-
-
 
 
 
 /// @notice console log the first item of the stack 
 #define macro LOG_STACK_1(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
 }
 
 /// @notice console log the first 2 items of the stack 
 #define macro LOG_STACK_2(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
 }
 
 /// @notice console log the first 3 items of the stack 
 #define macro LOG_STACK_3(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
 }
 
 /// @notice console log the first 4 items of the stack 
 #define macro LOG_STACK_4(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
 }
 
 /// @notice console log the first 5 items of the stack 
 #define macro LOG_STACK_5(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
 }
 
 /// @notice console log the first 6 items of the stack 
 #define macro LOG_STACK_6(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
 }
 
 /// @notice console log the first 7 items of the stack 
 #define macro LOG_STACK_7(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
 }
 
 /// @notice console log the first 8 items of the stack 
 #define macro LOG_STACK_8(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
 }
 
 /// @notice console log the first 9 items of the stack 
 #define macro LOG_STACK_9(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
 }
 
 /// @notice console log the first 10 items of the stack 
 #define macro LOG_STACK_10(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
 }
 
 /// @notice console log the first 11 items of the stack 
 #define macro LOG_STACK_11(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup11 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
+    LOG_STACK(dup11, <mem_ptr>)
 }
 
 /// @notice console log the first 12 items of the stack 
 #define macro LOG_STACK_12(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup11 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup12 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
+    LOG_STACK(dup11, <mem_ptr>)
+    LOG_STACK(dup12, <mem_ptr>)
 }
 
 /// @notice console log the first 13 items of the stack 
 #define macro LOG_STACK_13(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup11 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup12 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup13 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
+    LOG_STACK(dup11, <mem_ptr>)
+    LOG_STACK(dup12, <mem_ptr>)
+    LOG_STACK(dup13, <mem_ptr>)
 }
 
 /// @notice console log the first 14 items of the stack 
 #define macro LOG_STACK_14(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup11 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup12 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup13 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup14 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
+    LOG_STACK(dup11, <mem_ptr>)
+    LOG_STACK(dup12, <mem_ptr>)
+    LOG_STACK(dup13, <mem_ptr>)
+    LOG_STACK(dup14, <mem_ptr>)
 }
 
 /// @notice console log the first 15 items of the stack 
 #define macro LOG_STACK_15(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup11 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup12 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup13 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup14 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup15 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
+    LOG_STACK(dup11, <mem_ptr>)
+    LOG_STACK(dup12, <mem_ptr>)
+    LOG_STACK(dup13, <mem_ptr>)
+    LOG_STACK(dup14, <mem_ptr>)
+    LOG_STACK(dup15, <mem_ptr>)
 }
 
 /// @notice console log the first 16 items of the stack 
 #define macro LOG_STACK_16(mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    dup1 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+    LOG_STACK(dup1, <mem_ptr>)
+    LOG_STACK(dup2, <mem_ptr>)
+    LOG_STACK(dup3, <mem_ptr>)
+    LOG_STACK(dup4, <mem_ptr>)
+    LOG_STACK(dup5, <mem_ptr>)
+    LOG_STACK(dup6, <mem_ptr>)
+    LOG_STACK(dup7, <mem_ptr>)
+    LOG_STACK(dup8, <mem_ptr>)
+    LOG_STACK(dup9, <mem_ptr>)
+    LOG_STACK(dup10, <mem_ptr>)
+    LOG_STACK(dup11, <mem_ptr>)
+    LOG_STACK(dup12, <mem_ptr>)
+    LOG_STACK(dup13, <mem_ptr>)
+    LOG_STACK(dup14, <mem_ptr>)
+    LOG_STACK(dup15, <mem_ptr>)
+    LOG_STACK(dup16, <mem_ptr>)
+}
 
-    dup2 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
 
-    dup3 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
 
-    dup4 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
 
-    dup5 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup6 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup7 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup8 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup9 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup10 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup11 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup12 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup13 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup14 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup15 <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
-
-    dup16 <mem_ptr> 0x04 add mstore
+#define macro LOG_STACK(dupN, mem_ptr) = {
+    <dupN> <mem_ptr> 0x04 add mstore
     0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
 }
