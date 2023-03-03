@@ -1,7 +1,3 @@
-/// @title Console3.huff
-/// @notice SPDX-License-Identifier: MIT
-/// @author AmadiMichael <https://github.com/AmadiMichael>
-
 #include "./Console.huff"
 
 #define function logTest(uint256, uint256, uint256) pure returns (uint256)
@@ -18,6 +14,8 @@
     // logs out calldata as bytes from offset 0x04 till 0x04 + 0x60 bytes and uses memory offset 0x00 for logging operations
     LOG_CALLDATA(0x04, 0x60, 0x00)
 
+    LOG_CALLDATA_AS_UINT(0x04, 0x00)
+
     // logs out calldata as bytes from offset 0x04 till 0x04 + 0x20 bytes and uses memory offset 0x00 for logging operations
     LOG_CALLDATA_AS_STRING(0x04, 0x20, 0x00)
     
@@ -29,6 +27,7 @@
 
     // logs out memory as string from offset 0x00 till offset 0x00 + 0x06 bytes and uses memory offset 0x20 for logging operations
     LOG_MEMORY_AS_STRING(0x00, 0x06, 0x20)
+
 
     // STYLE_LOGGING
     // store the signature of the style type in memory
@@ -43,9 +42,14 @@
     // fill up the stack for stack operations below
     pc 0x4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45 caller 0x00 
     gas 0x48bed44d1bcd124a28c27f343a817e5f5243190d3c52bf347daf876de1dbbf77 address 0x01                     // [0x01, address(this), randomHash, gas, 0x00, caller, randomHash, pc]
+    pc 0x4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45 caller 0x00 
+    gas 0x48bed44d1bcd124a28c27f343a817e5f5243190d3c52bf347daf876de1dbbf77 address 0x01                     // [0x01, address(this), randomHash, gas, 0x00, caller, randomHash, pc]
 
     // logs out the first 8 stack items and uses 0x00 for logging operations
-    LOG_STACK_8(0x00)                           // [0x01, address(this), blockhash, gas, 0x00, caller, gasprice, pc]
+    LOG_STACK_16(0x00)                           // [0x01, address(this), blockhash, gas, 0x00, caller, gasprice, pc]
+
+    LINE_BREAK(0x00, 0x20)
+
     
     // logs stack item 1 as a boolean
     LOG_STACK_AS_BOOL(dup1, 0x00)               // [0x01, address(this), blockhash, gas, 0x00, caller, gasprice, pc]

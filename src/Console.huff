@@ -1,7 +1,17 @@
-/// @title UniswapV2Pair
+/// @title Console
 /// @notice SPDX-License-Identifier: MIT
 /// @author AmadiMichael <https://github.com/AmadiMichael>
 /// @notice Console.log functionalities for huff/bytecode written contracts compiled using foundry
+
+#include "./Vm.huff"
+
+
+
+
+
+
+//////////////////////  STYLE=STD CONSTANTS  /////////////////////////////
+
 
 #define constant RED = 0x1b5b39316d000000000000000000000000000000000000000000000000000000
 #define constant GREEN = 0x1b5b39326d000000000000000000000000000000000000000000000000000000
@@ -17,6 +27,24 @@
 #define constant RESET = 0x1b5b306d00000000000000000000000000000000000000000000000000000000
 
 
+
+
+
+
+//////////////////////  EXPERIMENTAL (STYLE-STD)  /////////////////////////////
+
+
+/// @notice EXPERIMENTAL FEATURE
+/// @dev @param start is the offset to pre store line break bytecode in memory
+/// @dev @param mem_ptr is free memory location to be used for logging operations (would take more than 32 bytes)
+#define macro LINE_BREAK(start, mem_ptr) = {
+    // "0a" is hex for "\n" which breaks into a new line
+    __RIGHTPAD(0x0a) <start> mstore
+    // logs out memory as bytes from offset 0x00 till offset 0x00 + 0x06 bytes and uses memory offset 0x20 for logging operations
+    LOG_MEMORY_AS_STRING(<start>, 0x01, <mem_ptr>)
+}
+
+/// @notice EXPERIMENTAL FEATURE
 /// @notice styled logs is still experimental
 /// @notice console log the first item of the stack 
 /// @dev @param style is the offset in memory where the color signature is stored
@@ -39,18 +67,18 @@
 
 
 
+
+
+
+
+//////////////////////  MEMORY  /////////////////////////////
+
+
 /// @notice console log memory from `start` to (`start` + `size`) as bytes
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_MEMORY(start, size, mem_ptr) = {
     0x0be77f5600000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <mem_ptr> 0x04 add mstore
-    <size> <mem_ptr> 0x24 add mstore
-
-    <size> <mem_ptr> 0x44 add <size> <start> 0x04 gas 
-    staticcall pop
-
-    0x00 0x00 <size> 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    _LOG_MEMORY(<start>, <size>, <mem_ptr>)
 }
 
 
@@ -61,27 +89,24 @@
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_MEMORY_AS_STRING(start, size, mem_ptr) = {
     0x41304fac00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <mem_ptr> 0x04 add mstore
-    <size> <mem_ptr> 0x24 add mstore
-
-    <size> <mem_ptr> 0x44 add <size> <start> 0x04 gas 
-    staticcall pop
-
-    0x00 0x00 <size> 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    _LOG_MEMORY(<start>, <size>, <mem_ptr>)
 }
+
+
+
+
+
+
+
+
+//////////////////////  CALLDATA  /////////////////////////////
+
 
 /// @notice console log calldata from `start` to (`start` + `size`) as bytes
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_CALLDATA(start, size, mem_ptr) = {
     0x0be77f5600000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <mem_ptr> 0x04 add mstore
-    <size> <mem_ptr> 0x24 add mstore
-
-    <size> <start> <mem_ptr> 0x44 add calldatacopy
-
-    0x00 0x00 <size> 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    _LOG_CALLDATA(<start>, <size>, <mem_ptr>)
 }
 
 /// @notice console log calldata between start to (start + size) as string
@@ -91,54 +116,40 @@
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_CALLDATA_AS_STRING(start, size, mem_ptr) = {
     0x41304fac00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <mem_ptr> 0x04 add mstore
-    <size> <mem_ptr> 0x24 add mstore
+    _LOG_CALLDATA(<start>, <size>, <mem_ptr>)
 
-    <size> <start> <mem_ptr> 0x44 add calldatacopy
-
-    0x00 0x00 <size> 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
 }
+
+
+//////////////////////  CALLDATA (TYPES) /////////////////////////////
 
 
 /// @notice console log calldata from `start` to (`start` + `size`) as uint256
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_CALLDATA_AS_UINT(start, mem_ptr) = {
     0xf5b1bba900000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <start> <mem_ptr> 0x04 add calldatacopy
-
-    0x00 0x00 0x20 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    LOG_CALLDATA_TYPE(<start>, <mem_ptr>)
 }
 
 /// @notice console log calldata from `start` to (`start` + `size`) as int256
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_CALLDATA_AS_INT(start, mem_ptr) = {
     0x4e0c1d1d00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <start> <mem_ptr> 0x04 add calldatacopy
-
-    0x00 0x00 0x20 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    LOG_CALLDATA_TYPE(<start>, <mem_ptr>)
 }
 
 /// @notice console log calldata from `start` to (`start` + `size`) as an address
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_CALLDATA_AS_ADDRESS(start, mem_ptr) = {
     0x2c2ecbc200000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <start> <mem_ptr> 0x04 add calldatacopy
-
-    0x00 0x00 0x20 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    LOG_CALLDATA_TYPE(<start>, <mem_ptr>)
 }
 
 /// @notice console log calldata from `start` to (`start` + `size`) as a bytes32
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_CALLDATA_AS_BYTES32(start, mem_ptr) = {
     0x27b7cf8500000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <start> <mem_ptr> 0x04 add calldatacopy
-
-    0x00 0x00 0x20 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    LOG_CALLDATA_TYPE(<start>, <mem_ptr>)
 }
 
 /// @notice console log calldata from `start` to (`start` + `size`) as a boolean
@@ -146,10 +157,7 @@
 /// @dev only 0x01 is seen as true in this case. meaning 0x00 and any value greater than 0x02 will log out false
 #define macro LOG_CALLDATA_AS_BOOL(start, mem_ptr) = {
     0x32458eed00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
-    0x20 <start> <mem_ptr> 0x04 add calldatacopy
-
-    0x00 0x00 0x20 0x44 add <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas 
-    staticcall pop
+    LOG_CALLDATA_TYPE(<start>, <mem_ptr>)
 }
 
 
@@ -158,6 +166,7 @@
 
 
 
+//////////////////////  STACK (TYPES)  /////////////////////////////
 
 
 /// @notice console log stack item `N`as uint256
@@ -201,6 +210,11 @@
     LOG_STACK(<dupN>, <mem_ptr>)
 }
 
+
+
+
+
+//////////////////////  STACK  /////////////////////////////
 
 
 /// @notice console log the first item of the stack 
@@ -422,7 +436,39 @@
 
 
 
+
+//////////////////////  UTILS  /////////////////////////////
+
+#define macro _LOG_MEMORY(start, size, mem_ptr) = {
+    0x20 <mem_ptr> 0x04 add mstore
+    <size> <mem_ptr> 0x24 add mstore
+    <size> <mem_ptr> 0x44 add <size> <start> 0x04 gas 
+    staticcall pop
+
+    <size> 0x44 add STATIC_LOG(dup3, <mem_ptr>) pop
+}
+
+#define macro _LOG_CALLDATA(start, size, mem_ptr) = {
+    0x20 <mem_ptr> 0x04 add mstore
+    <size> <mem_ptr> 0x24 add mstore
+    <size> <start> <mem_ptr> 0x44 add calldatacopy
+
+    <size> 0x44 add STATIC_LOG(dup3, <mem_ptr>) pop
+}
+
+
+#define macro LOG_CALLDATA_TYPE(start, mem_ptr) = {
+    0x20 <start> <mem_ptr> 0x04 add calldatacopy
+
+    STATIC_LOG(0x24, <mem_ptr>)
+}
+
 #define macro LOG_STACK(dupN, mem_ptr) = {
     <dupN> <mem_ptr> 0x04 add mstore
-    0x00 0x00 0x24 <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
+
+    STATIC_LOG(0x24, <mem_ptr>)
+}
+
+#define macro STATIC_LOG(length, mem_ptr) = {
+    0x00 0x00 <length> <mem_ptr> 0x000000000000000000636F6e736F6c652e6c6f67 gas staticcall pop
 }

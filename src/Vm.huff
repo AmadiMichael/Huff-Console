@@ -1,0 +1,26 @@
+/// @title VM
+/// @notice SPDX-License-Identifier: MIT
+/// @author AmadiMichael <https://github.com/AmadiMichael>
+/// @notice Console.log functionalities for huff/bytecode written contracts compiled using foundry
+
+
+
+
+
+//////////////////////  EXPERIMENTAL (VM)  /////////////////////////////
+
+
+#define macro TO_STRING_BYTES(offset, size, mem_ptr) = {
+   
+    <mem_ptr> <size>  <offset>               // stack [offset, size, mem_ptr]
+    0x71aad10d00000000000000000000000000000000000000000000000000000000 dup4 mstore
+
+    dup2 dup4 0x04 add dup4 dup4 0x04 gas 
+    staticcall pop
+
+    0x00 0x00 dup4 0x04 add dup6 0x7109709ecfa91a80626ff3989d68f67f5b1dd12d gas staticcall pop
+
+    returndatasize dup1 0x00 dup4 returndatacopy
+
+    swap3 pop pop pop   // [returndatasize]
+}
