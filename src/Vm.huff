@@ -11,7 +11,6 @@
 
 
 #define macro TO_STRING_BYTES(offset, size, mem_ptr) = {
-   
     <mem_ptr> <size>  <offset>               // stack [offset, size, mem_ptr]
     0x71aad10d00000000000000000000000000000000000000000000000000000000 dup4 mstore
 

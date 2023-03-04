@@ -35,6 +35,7 @@
 
 
 /// @notice EXPERIMENTAL FEATURE
+/// @notice can be used to create a line break to help differentiate between different logs
 /// @dev @param start is the offset to pre store line break bytecode in memory
 /// @dev @param mem_ptr is free memory location to be used for logging operations (would take more than 32 bytes)
 #define macro LINE_BREAK(start, mem_ptr) = {
@@ -43,6 +44,7 @@
     // logs out memory as bytes from offset 0x00 till offset 0x00 + 0x06 bytes and uses memory offset 0x20 for logging operations
     LOG_MEMORY_AS_STRING(<start>, 0x01, <mem_ptr>)
 }
+ 
 
 /// @notice EXPERIMENTAL FEATURE
 /// @notice styled logs is still experimental
@@ -88,6 +90,7 @@
 /// To see the full data (length included), use LOG_MEMORY
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_MEMORY_AS_STRING(start, size, mem_ptr) = {
+    LOG_STACK_1(0x100)
     0x41304fac00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
     _LOG_MEMORY(<start>, <size>, <mem_ptr>)
 }
