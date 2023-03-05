@@ -90,7 +90,6 @@
 /// To see the full data (length included), use LOG_MEMORY
 /// @dev @param mem_ptr is the memory offset to be used by the macro, should be safe to use to avoid overriding useful memory data
 #define macro LOG_MEMORY_AS_STRING(start, size, mem_ptr) = {
-    LOG_STACK_1(0x100)
     0x41304fac00000000000000000000000000000000000000000000000000000000 <mem_ptr> mstore
     _LOG_MEMORY(<start>, <size>, <mem_ptr>)
 }
