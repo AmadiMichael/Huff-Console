@@ -3,7 +3,7 @@ src = 'src'
 out = 'out'
 libs = ['lib']
 ffi = true
-
+evm_version = "shanghai"
 
 remappings = [
     "forge-std/=lib/forge-std/src/",
